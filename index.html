@@ -4,190 +4,204 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DownloaderToMobile - Video Downloader</title>
-<meta name="description" content="A simple video link checker and downloader for videos you own or have permission to download.">
+<title>DownloaderToMobile</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box}
 body{
-  font-family:Arial,sans-serif;
-  background:#f1f5f9;color:#172033;
-  min-height:100vh;
+ margin:0;background:#f1f5f9;color:#172033;
+ font-family:Arial,sans-serif;
 }
 header{
-  background:#101827;color:white;
-  padding:22px 7%;display:flex;
-  justify-content:space-between;align-items:center;
+ background:#101827;color:white;padding:22px;
+ text-align:center;font-size:25px;font-weight:bold;
 }
-.logo{font-size:23px;font-weight:bold}
-.logo span{color:#38bdf8}
-header small{color:#cbd5e1}
-main{max-width:850px;margin:65px auto;padding:20px}
-.hero{text-align:center;margin-bottom:32px}
-.hero h1{font-size:38px;margin-bottom:14px}
+header span{color:#38bdf8}
+main{max-width:750px;margin:55px auto;padding:20px}
+.hero{text-align:center;margin-bottom:30px}
+.hero h1{font-size:36px}
 .hero h1 span{color:#0284c7}
-.hero p{color:#64748b;line-height:1.7}
+.hero p{color:#64748b;line-height:1.6}
 .platforms{
  display:flex;justify-content:center;
  gap:12px;flex-wrap:wrap;margin:25px 0;
 }
 .platform{
- background:white;padding:12px 20px;
+ background:white;padding:13px 20px;
  border-radius:12px;font-weight:bold;
- box-shadow:0 3px 12px #0000000c;
 }
 .card{
- background:white;padding:28px;
+ background:white;padding:25px;
  border-radius:18px;
- box-shadow:0 8px 30px #0000000c;
+ box-shadow:0 5px 25px #0001;
 }
-label{font-weight:bold;display:block;margin-bottom:12px}
-.inputrow{display:flex;gap:10px}
-input{
- flex:1;min-width:0;padding:16px;
+label{display:block;font-weight:bold;margin-bottom:12px}
+input[type=url]{
+ width:100%;padding:16px;
  border:1px solid #cbd5e1;
  border-radius:10px;font-size:15px;
- outline:none;
+ margin-bottom:12px;
 }
-input:focus{border-color:#0284c7}
-button{
+button,.download{
+ display:block;width:100%;padding:15px;
  border:0;border-radius:10px;
- padding:15px 22px;
  background:#0284c7;color:white;
- font-weight:bold;font-size:15px;
- cursor:pointer;
+ font-weight:bold;font-size:16px;
+ cursor:pointer;text-align:center;
+ text-decoration:none;
 }
-button:hover{background:#0369a1}
+button:hover,.download:hover{background:#0369a1}
 #result{
- margin-top:22px;padding:18px;
- background:#f0f9ff;border-radius:12px;
- display:none;line-height:1.7;
+ display:none;margin-top:22px;
+ background:#f0f9ff;padding:18px;
+ border-radius:12px;line-height:1.6;
+ overflow-wrap:anywhere;
 }
-#preview{width:100%;aspect-ratio:16/9;
- border:0;border-radius:10px;margin-top:15px;
-}
-.download{
- display:inline-block;margin-top:14px;
- padding:13px 20px;background:#16a34a;
- color:white;text-decoration:none;
- border-radius:9px;font-weight:bold;
-}
-.note{color:#64748b;font-size:13px;margin-top:18px}
-footer{text-align:center;color:#64748b;padding:35px 15px}
+video{width:100%;margin-top:15px;border-radius:10px}
+.download{background:#16a34a;margin-top:15px}
+.note{font-size:13px;color:#64748b;margin-top:18px}
+footer{text-align:center;color:#64748b;padding:30px}
 @media(max-width:550px){
- header{padding:18px}
- .logo{font-size:19px}
- main{margin:35px auto}
+ main{margin:25px auto}
  .hero h1{font-size:29px}
- .card{padding:20px}
- .inputrow{flex-direction:column}
- button{width:100%}
+ .card{padding:18px}
 }
 </style>
 </head>
 <body>
 
-<header>
- <div class="logo">⬇ Downloader<span>ToMobile</span></div>
- <small>Fast & Simple</small>
-</header>
+<header>⬇ Downloader<span>ToMobile</span></header>
 
 <main>
- <section class="hero">
-  <h1>Video <span>Downloader</span></h1>
-  <p>Check your video link and access supported video options easily.</p>
- </section>
+<section class="hero">
+<h1>Video <span>Downloader</span></h1>
+<p>Preview and access your permitted video files easily.</p>
+</section>
 
- <div class="platforms">
-  <div class="platform">🔵 Facebook</div>
-  <div class="platform">▶ YouTube</div>
-  <div class="platform">🎵 TikTok</div>
- </div>
+<div class="platforms">
+<div class="platform">🔵 Facebook</div>
+<div class="platform">▶ YouTube</div>
+<div class="platform">🎵 TikTok</div>
+</div>
 
- <section class="card">
-  <label for="videoURL">Paste Your Video Link</label>
-  <div class="inputrow">
-   <input id="videoURL" type="url"
-    placeholder="https://paste-your-video-link.com">
-   <button onclick="checkVideo()">Check Link</button>
-  </div>
+<section class="card">
+<label for="videoURL">Paste Video Link</label>
+<input type="url" id="videoURL"
+placeholder="Paste your video URL here">
 
-  <div id="result"></div>
-  <p class="note">
-   Only download videos you own or have permission to download.
-   Platform restrictions may apply.
-  </p>
- </section>
+<button onclick="checkVideo()">Find Video</button>
+
+<div id="result"></div>
+
+<p class="note">
+Only download videos you own or have permission to download.
+Platform restrictions apply.
+</p>
+</section>
 </main>
 
 <footer>
- <p>© 2026 DownloaderToMobile.com</p>
- <p style="margin-top:8px">Simple • Fast • Easy</p>
+© 2026 DownloaderToMobile
 </footer>
-
 
 <script>
 function checkVideo(){
- const input=document.getElementById("videoURL");
+
+ const value=document.getElementById("videoURL").value.trim();
  const result=document.getElementById("result");
- const value=input.value.trim();
 
  result.style.display="block";
  result.innerHTML="";
 
  let url;
+
  try{
   url=new URL(value);
-  if(!["https:","http:"].includes(url.protocol)){
-   throw new Error();
-  }
+  if(!["https:","http:"].includes(url.protocol)) throw Error();
  }catch(e){
   result.innerHTML="❌ Please enter a valid video URL.";
   return;
  }
 
- const extension=url.pathname.split(".").pop().toLowerCase();
- const supported=["mp4","webm","ogg"];
+ const host=url.hostname.toLowerCase();
 
- if(!supported.includes(extension)){
-  result.innerHTML=
-   "<h3>Video link detected</h3>"+
-   "<p>This is not a direct MP4, WebM or OGG video file.</p>"+
-   "<p>Please paste a direct video file URL that you own or have permission to download.</p>";
+ const youtube=
+ host==="youtube.com" || host.endsWith(".youtube.com") ||
+ host==="youtu.be";
+
+ const facebook=
+ host==="facebook.com" || host.endsWith(".facebook.com") ||
+ host==="fb.watch";
+
+ const tiktok=
+ host==="tiktok.com" || host.endsWith(".tiktok.com");
+
+ if(youtube){
+  let id=host==="youtu.be"
+   ?url.pathname.slice(1)
+   :url.searchParams.get("v");
+
+  result.innerHTML="<h3>✅ YouTube Video Found</h3>";
+
+  if(id && /^[a-zA-Z0-9_-]{11}$/.test(id)){
+   const frame=document.createElement("iframe");
+   frame.src="https://www.youtube-nocookie.com/embed/"+id;
+   frame.style.width="100%";
+   frame.style.aspectRatio="16/9";
+   frame.style.border="0";
+   frame.style.marginTop="15px";
+   frame.allowFullscreen=true;
+   result.appendChild(frame);
+  }
+
+  const p=document.createElement("p");
+  p.textContent="Use YouTube's official download options where available.";
+  result.appendChild(p);
   return;
  }
 
- result.innerHTML=
-  "<h3>✅ Video File Detected!</h3>"+
-  "<p>Original video quality</p>";
+ if(facebook || tiktok){
+  result.innerHTML=
+   "<h3>✅ "+(facebook?"Facebook":"TikTok")+" Link Found</h3>"+
+   "<p>Link recognized successfully.</p>"+
+   "<p>Use the platform's official sharing or download options where available. This website does not extract restricted video files.</p>";
+  return;
+ }
+
+ const ext=url.pathname.split(".").pop().toLowerCase();
+
+ if(!["mp4","webm","ogg"].includes(ext)){
+  result.innerHTML=
+   "<h3>Video Link Received</h3>"+
+   "<p>This is not a direct supported video file link.</p>"+
+   "<p>Please use a direct MP4, WebM or OGG file URL that you are authorized to download.</p>";
+  return;
+ }
+
+ result.innerHTML="<h3>✅ Video File Found!</h3>";
 
  const video=document.createElement("video");
+ video.src=url.href;
  video.controls=true;
  video.playsInline=true;
- video.style.width="100%";
- video.style.marginTop="15px";
- video.style.borderRadius="12px";
- video.src=url.href;
-
  result.appendChild(video);
 
  const quality=document.createElement("p");
- quality.style.marginTop="15px";
- quality.innerHTML="<b>Available Quality:</b> Original Quality";
+ quality.innerHTML="<b>Quality:</b> Original file quality";
  result.appendChild(quality);
 
- const download=document.createElement("a");
- download.href=url.href;
- download.download="";
- download.className="download";
- download.textContent="⬇ Download Video";
- download.target="_blank";
- download.rel="noopener";
- result.appendChild(download);
+ const link=document.createElement("a");
+ link.href=url.href;
+ link.download="";
+ link.className="download";
+ link.textContent="⬇ Download Video";
+ link.target="_blank";
+ link.rel="noopener";
+ result.appendChild(link);
 
  const note=document.createElement("p");
  note.className="note";
  note.textContent=
- "Download behavior depends on the video host. Some hosts require permission or may open the video instead of downloading it.";
+ "Download availability depends on the video host. Cross-origin restrictions may prevent direct downloads.";
  result.appendChild(note);
 }
 </script>
