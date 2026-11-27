@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DownloaderToMobile - Video Downloader</title>
+<meta name="description" content="A simple video link checker and downloader for videos you own or have permission to download.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial,sans-serif;
+  background:#f1f5f9;color:#172033;
+  min-height:100vh;
+}
+header{
+  background:#101827;color:white;
+  padding:22px 7%;display:flex;
+  justify-content:space-between;align-items:center;
+}
+.logo{font-size:23px;font-weight:bold}
+.logo span{color:#38bdf8}
+header small{color:#cbd5e1}
+main{max-width:850px;margin:65px auto;padding:20px}
+.hero{text-align:center;margin-bottom:32px}
+.hero h1{font-size:38px;margin-bottom:14px}
+.hero h1 span{color:#0284c7}
+.hero p{color:#64748b;line-height:1.7}
+.platforms{
+ display:flex;justify-content:center;
+ gap:12px;flex-wrap:wrap;margin:25px 0;
+}
+.platform{
+ background:white;padding:12px 20px;
+ border-radius:12px;font-weight:bold;
+ box-shadow:0 3px 12px #0000000c;
+}
+.card{
+ background:white;padding:28px;
+ border-radius:18px;
+ box-shadow:0 8px 30px #0000000c;
+}
+label{font-weight:bold;display:block;margin-bottom:12px}
+.inputrow{display:flex;gap:10px}
+input{
+ flex:1;min-width:0;padding:16px;
+ border:1px solid #cbd5e1;
+ border-radius:10px;font-size:15px;
+ outline:none;
+}
+input:focus{border-color:#0284c7}
+button{
+ border:0;border-radius:10px;
+ padding:15px 22px;
+ background:#0284c7;color:white;
+ font-weight:bold;font-size:15px;
+ cursor:pointer;
+}
+button:hover{background:#0369a1}
+#result{
+ margin-top:22px;padding:18px;
+ background:#f0f9ff;border-radius:12px;
+ display:none;line-height:1.7;
+}
+#preview{width:100%;aspect-ratio:16/9;
+ border:0;border-radius:10px;margin-top:15px;
+}
+.download{
+ display:inline-block;margin-top:14px;
+ padding:13px 20px;background:#16a34a;
+ color:white;text-decoration:none;
+ border-radius:9px;font-weight:bold;
+}
+.note{color:#64748b;font-size:13px;margin-top:18px}
+footer{text-align:center;color:#64748b;padding:35px 15px}
+@media(max-width:550px){
+ header{padding:18px}
+ .logo{font-size:19px}
+ main{margin:35px auto}
+ .hero h1{font-size:29px}
+ .card{padding:20px}
+ .inputrow{flex-direction:column}
+ button{width:100%}
+}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="logo">⬇ Downloader<span>ToMobile</span></div>
+ <small>Fast & Simple</small>
+</header>
+
+<main>
+ <section class="hero">
+  <h1>Video <span>Downloader</span></h1>
+  <p>Check your video link and access supported video options easily.</p>
+ </section>
+
+ <div class="platforms">
+  <div class="platform">🔵 Facebook</div>
+  <div class="platform">▶ YouTube</div>
+  <div class="platform">🎵 TikTok</div>
+ </div>
+
+ <section class="card">
+  <label for="videoURL">Paste Your Video Link</label>
+  <div class="inputrow">
+   <input id="videoURL" type="url"
+    placeholder="https://paste-your-video-link.com">
+   <button onclick="checkVideo()">Check Link</button>
+  </div>
+
+  <div id="result"></div>
+  <p class="note">
+   Only download videos you own or have permission to download.
+   Platform restrictions may apply.
+  </p>
+ </section>
+</main>
+
+<footer>
+ <p>© 2026 DownloaderToMobile.com</p>
+ <p style="margin-top:8px">Simple • Fast • Easy</p>
+</footer>
+
+<script>
+function checkVideo(){
+ const urlInput=document.getElementById("videoURL");
+ const result=document.getElementById("result");
+ const value=urlInput.value.trim();
+
+ result.style.display="block";
+ result.innerHTML="";
+
+ let url;
+ try{
+  url=new URL(value);
+  if(url.protocol!=="https:" && url.protocol!=="http:"){
+   throw new Error();
+  }
+ }catch(e){
+  result.innerHTML="❌ Please enter a valid video URL.";
+  return;
+ }
+
+ const host=url.hostname.toLowerCase();
+ let platform="";
+ let youtubeId="";
+
+ if(host==="youtube.com" || host.endsWith(".youtube.com") ||
+    host==="youtu.be" || host==="youtube-nocookie.com"){
+  platform="YouTube";
+  if(host==="youtu.be") youtubeId=url.pathname.slice(1);
+  else youtubeId=url.searchParams.get("v") ||
+       url.pathname.split("/").filter(Boolean).pop();
+ }else if(host==="facebook.com" ||
+          host.endsWith(".facebook.com") ||
+          host==="fb.watch"){
+  platform="Facebook";
+ }else if(host==="tiktok.com" ||
+          host.endsWith(".tiktok.com")){
+  platform="TikTok";
+ }else{
+  result.innerHTML="❌ This platform is not supported.";
+  return;
+ }
+
+ result.innerHTML=
+  "<h3>✅ "+platform+" link detected!</h3>"+
+  "<p>Your video link has been recognized.</p>";
+
+ if(platform==="YouTube" && youtubeId &&
+    /^[a-zA-Z0-9_-]{11}$/.test(youtubeId)){
+  const iframe=document.createElement("iframe");
+  iframe.id="preview";
+  iframe.src="https://www.youtube-nocookie.com/embed/"+
+       encodeURIComponent(youtubeId);
+  iframe.allowFullscreen=true;
+  iframe.title="YouTube video preview";
+  result.appendChild(iframe);
+ }
+
+ const message=document.createElement("p");
+ message.style.marginTop="15px";
+ message.textContent=
+  "To download this video, use the platform's official download option where available, or obtain the original video file from its owner. This website does not bypass platform restrictions.";
+ result.appendChild(message);
+}
+</script>
+
+</body>
+</html>
