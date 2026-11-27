@@ -124,11 +124,12 @@ footer{text-align:center;color:#64748b;padding:35px 15px}
  <p style="margin-top:8px">Simple • Fast • Easy</p>
 </footer>
 
+
 <script>
 function checkVideo(){
- const urlInput=document.getElementById("videoURL");
+ const input=document.getElementById("videoURL");
  const result=document.getElementById("result");
- const value=urlInput.value.trim();
+ const value=input.value.trim();
 
  result.style.display="block";
  result.innerHTML="";
@@ -136,7 +137,7 @@ function checkVideo(){
  let url;
  try{
   url=new URL(value);
-  if(url.protocol!=="https:" && url.protocol!=="http:"){
+  if(!["https:","http:"].includes(url.protocol)){
    throw new Error();
   }
  }catch(e){
@@ -144,48 +145,50 @@ function checkVideo(){
   return;
  }
 
- const host=url.hostname.toLowerCase();
- let platform="";
- let youtubeId="";
+ const extension=url.pathname.split(".").pop().toLowerCase();
+ const supported=["mp4","webm","ogg"];
 
- if(host==="youtube.com" || host.endsWith(".youtube.com") ||
-    host==="youtu.be" || host==="youtube-nocookie.com"){
-  platform="YouTube";
-  if(host==="youtu.be") youtubeId=url.pathname.slice(1);
-  else youtubeId=url.searchParams.get("v") ||
-       url.pathname.split("/").filter(Boolean).pop();
- }else if(host==="facebook.com" ||
-          host.endsWith(".facebook.com") ||
-          host==="fb.watch"){
-  platform="Facebook";
- }else if(host==="tiktok.com" ||
-          host.endsWith(".tiktok.com")){
-  platform="TikTok";
- }else{
-  result.innerHTML="❌ This platform is not supported.";
+ if(!supported.includes(extension)){
+  result.innerHTML=
+   "<h3>Video link detected</h3>"+
+   "<p>This is not a direct MP4, WebM or OGG video file.</p>"+
+   "<p>Please paste a direct video file URL that you own or have permission to download.</p>";
   return;
  }
 
  result.innerHTML=
-  "<h3>✅ "+platform+" link detected!</h3>"+
-  "<p>Your video link has been recognized.</p>";
+  "<h3>✅ Video File Detected!</h3>"+
+  "<p>Original video quality</p>";
 
- if(platform==="YouTube" && youtubeId &&
-    /^[a-zA-Z0-9_-]{11}$/.test(youtubeId)){
-  const iframe=document.createElement("iframe");
-  iframe.id="preview";
-  iframe.src="https://www.youtube-nocookie.com/embed/"+
-       encodeURIComponent(youtubeId);
-  iframe.allowFullscreen=true;
-  iframe.title="YouTube video preview";
-  result.appendChild(iframe);
- }
+ const video=document.createElement("video");
+ video.controls=true;
+ video.playsInline=true;
+ video.style.width="100%";
+ video.style.marginTop="15px";
+ video.style.borderRadius="12px";
+ video.src=url.href;
 
- const message=document.createElement("p");
- message.style.marginTop="15px";
- message.textContent=
-  "To download this video, use the platform's official download option where available, or obtain the original video file from its owner. This website does not bypass platform restrictions.";
- result.appendChild(message);
+ result.appendChild(video);
+
+ const quality=document.createElement("p");
+ quality.style.marginTop="15px";
+ quality.innerHTML="<b>Available Quality:</b> Original Quality";
+ result.appendChild(quality);
+
+ const download=document.createElement("a");
+ download.href=url.href;
+ download.download="";
+ download.className="download";
+ download.textContent="⬇ Download Video";
+ download.target="_blank";
+ download.rel="noopener";
+ result.appendChild(download);
+
+ const note=document.createElement("p");
+ note.className="note";
+ note.textContent=
+ "Download behavior depends on the video host. Some hosts require permission or may open the video instead of downloading it.";
+ result.appendChild(note);
 }
 </script>
 
